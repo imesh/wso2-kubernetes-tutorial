@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.7.19
+        name: mysql
+        imagePullPolicy: IfNotPresent
+        env:
+          -
+            name: MYSQL_ROOT_PASSWORD
+            value: root
+        ports:
+        - containerPort: 3306
+          name: default-port
+        volumeMounts:
+        - name: mysql-scripts
+          mountPath: /docker-entrypoint-initdb.d/
+        args: ["--max-connections", "10000"]
+      volumes:
+      - name: mysql-scripts
+        configMap:
+          name: mysql-scripts

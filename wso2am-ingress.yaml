@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wso2am-ingress
+  labels:
+    run: wso2am
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+spec:
+  tls:
+  - hosts:
+    - wso2am
+  rules:
+  - host: wso2am
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wso2am
+          servicePort: 9443
